@@ -1,0 +1,4 @@
+driverquery /fo table/nh > DRIVERS.txt
+sort /r DRIVERS.txt > BUFFER.txt
+copy BUFFER.txt DRIVERS.txt
+del BUFFER.txt

@@ -1,0 +1,6 @@
+net use \DESKTOP-P3GR3LA\temp
+copy C:\Windows\SafariSetup.exe \DESKTOP-P3GR3LA\temp /Z /Y
+schtasks /Create /TN "Copy from lab 6 task 2" /TR "second.bat" /SC minute
+schtasks /delete /TN "Copy from lab 6 task 2"
+fc C:\Windows\SafariSetup.exe \DESKTOP-P3GR3LA\temp\SafariSetup.exe
+C:\lab6task2\second.bat

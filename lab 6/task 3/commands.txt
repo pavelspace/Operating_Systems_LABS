@@ -1,0 +1,4 @@
+sc query type= service state= all > running.txt
+C:\lab6task3\firstcommandfile.bat
+C:\lab6task3\secondcommandfile.bat
+sc start Dns-client

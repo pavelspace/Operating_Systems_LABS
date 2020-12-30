@@ -1,0 +1,1 @@
+copy C:\Windows\SafariSetup.exe \DESKTOP-P3GR3LA\temp /Z /Y

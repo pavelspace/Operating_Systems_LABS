@@ -1,0 +1,10 @@
+mkdir C:\LAB6
+cd C:\LAB6
+wmic OS GET Version > Version.txt
+wmic LOGICALDISK GET Size /Value > DataOnDisk.txt
+wmic LOGICALDISK GET FreeSpace /Value >> DataOnDisk.txt
+mkdir TEST
+robocopy C:\LAB6 C:\LAB6\TEST
+cd C:\LAB6\TEST
+copy C:\LAB6\TEST\*.txt  C:\LAB6\TEST\BigFile.txt
+del DataOnDisk.txt Version.txt
