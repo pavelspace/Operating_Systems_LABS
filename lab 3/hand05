@@ -1,0 +1,41 @@
+#!/bin/bash
+
+mode="+"
+number=1
+
+(tail -f pipe) | while true
+do
+	read line
+	case $line in
+		"+")
+			let "mode = +"
+		;;
+		"*")
+			let "mode = *"
+		;;
+	[0-9]*)
+		case $mode in
+			"+")
+				let "number += line"
+				echo "$number"
+			;;
+			"*")
+				let "number *= line"
+				echo "$number"
+			;;
+		esac
+	;;
+	"QUIT")
+		killall tail
+		killall gen05
+		echo "successfull exit"
+		exit 0
+	;;
+	*)
+		killall tail
+		killall gen05
+		echo "Wrong data"
+		exit 1
+	;;
+	esac
+done

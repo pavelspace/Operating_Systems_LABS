@@ -1,0 +1,5 @@
+#!/bin/bash
+
+ps axu | awk '$1 = "user"' | wc -l  > first.log
+
+ps axu | awk '$1 = "user" {printf $2 " : " $11"\n"}'  >> first.log

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+wc -l /var/log/*.log | awk '$2 = "total"' | sort -n | tail -1

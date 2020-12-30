@@ -1,0 +1,3 @@
+#!/bin/bash
+
+awk -F: '{printf ($1 " : " $3"\n")}' /etc/passwd | sort -nk 2

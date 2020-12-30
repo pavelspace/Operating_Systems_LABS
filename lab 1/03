@@ -1,0 +1,20 @@
+#!/bin/bash
+
+echo -e "1. Open nano\n2. Open vi\n3. Open links\n4. Exit"
+
+read input
+
+case "$input" in
+1 ) 
+    nano
+    ;;
+2 ) 
+    vi
+    ;;
+3)
+    links
+    ;;
+4 )
+    exit 0
+    ;;
+esac

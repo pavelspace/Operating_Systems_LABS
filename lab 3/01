@@ -1,0 +1,5 @@
+#!/bin/bash
+
+(mkdir /root/test) && (echo "catalog test was created successfully") > ~/report && (touch /root/test/$(date +"%d.%m.%Y %H:%M:%S"))
+
+(ping "www.net_nikogo.ru" 2> /dev/null) || (echo "$(date +"%d.%m.%y %H:%M:%S") wrong address") >> ~/report

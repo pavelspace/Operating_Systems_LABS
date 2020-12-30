@@ -1,0 +1,24 @@
+#!/bin/bash
+
+echo $$ > pid
+
+number=1
+
+usr1()
+{
+	let "number += 2"
+}
+
+usr2()
+{
+	let "number *= 2"
+}
+
+trap 'usr1' USR1
+trap 'usr2' USR2
+
+while true
+do
+    sleep 1
+    echo $number
+done

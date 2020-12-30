@@ -1,0 +1,49 @@
+#!/bin/bash
+
+buf=""
+nown=0
+nowm=0
+bufm=0
+mcount=0
+nowppid=""
+> fifth.log
+while read -r line
+do
+nowppid=$(echo $line | awk '{printf $5"\n"}')
+nowm=$(echo $line | awk '{printf $8"\n"}')
+if [[ $buf != "" ]] && [[ $buf != $nowppid ]]
+then
+    if [[ $buf != $nowppid ]]
+        then
+        let "bufm += nowm"
+        let "mcount += 1"
+        let "answerm = bufm/mcount"
+        if [[ $mcount == 1 ]]
+        then
+            let "bufm -= nowm"
+            let "answerm = bufm"
+        fi
+        nown=$buf
+        echo "Average_Sleeping_Children_of_ParentID=$nown is $answerm"  >> fifth.log
+        echo "$line" >> fifth.log
+        buf=$nowppid
+        mcount=0
+        bufm=$nowm
+    else
+        echo "$line" >> fifth.log
+        buf=$nowppid
+        let "mcount += 1"
+        let "bufm += nowm"
+    fi
+elif [[ $buf == $nowppid ]]
+then 
+    echo "$line" >> fifth.log
+    let "mcount += 1"
+    let "bufm += nowm"
+else
+    echo "$line" >> fifth.log
+    buf=$(echo $line | awk '{printf $5"\n"}')
+    bufm=$(echo $line | awk '{printf $8"\n"}')
+    mcount=0
+fi
+done < fourth.log

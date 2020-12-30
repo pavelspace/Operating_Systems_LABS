@@ -1,0 +1,10 @@
+#!/bin/bash
+
+./infcycle4 & pid1=$!
+./infcycle4 & pid2=$!
+./infcycle4 & pid3=$!
+
+renice -n 10 -p $pid1
+
+kill $pid3
+

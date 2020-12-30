@@ -1,0 +1,20 @@
+#!/bin/bash
+
+maxsize=-1
+maxid=""
+
+for pid in $(ps axu | awk '{printf $2"\n"}')
+do
+nowsize=$(cat /proc/"$pid"/status | grep -w  "VmRSS" | grep -o "[0-9]\+") 
+nowid=$(cat /proc/"$pid"/status | grep -w  "Pid" | grep -o "[0-9]\+")
+
+if [[ $nowsize -gt $maxsize ]] && [[ $pid == $nowid ]]
+then    
+    maxsize=$nowsize
+    maxid=$nowid
+fi
+done
+
+echo -e "$maxid and $maxsize"
+
+top -bn 1 | sort -nrk 6 | awk '{printf $1 " and " $6 "\n"}' | head -1

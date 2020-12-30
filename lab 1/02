@@ -1,0 +1,12 @@
+#!/bin/bash
+
+buffer=""
+input=""
+
+while [ "$input" != "q" ] 
+do 
+    buffer+="$input"
+    read input
+done
+
+echo "$buffer"

@@ -1,0 +1,19 @@
+#!/bin/bash
+
+> fourthbuf.log
+for pid in $(ps axu | awk '{printf $2"\n"}')
+do
+id=$(cat /proc/"$pid"/status | grep -w  "Pid" | grep -o "[0-9]\+") 
+ppid=$(cat /proc/"$pid"/status | grep -w  "PPid" | grep -o "[0-9]\+")
+sum_exec_runtime=$(cat /proc/"$pid"/sched | grep -w  "se.sum_exec_runtime" | grep -o "[0-9]\+")
+nr_switches=$(cat /proc/"$pid"/sched | grep -w  "nr_switches" | grep -o "[0-9]\+")
+art=($sum_exec_runtime/$nr_switches)
+if [[ $id == $pid ]] 
+then
+    echo -e "ProcessID= $id : Parent_ProcessID= $ppid : Average_Running_Time= $art" >> fourthbuf.log
+fi
+done
+
+cat fourthbuf.log |  sort --key=3 -V > fourth.log
+
+rm fourthbuf.log

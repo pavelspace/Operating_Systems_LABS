@@ -1,0 +1,3 @@
+#!/bin/bash
+
+ps axu | awk '$11 = "/sbin/*" {printf $2 "\n"}' > second.log

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+man bash | tr -s '[[:space:]]' '\n' | sort -r | uniq -c | sort -rn | head -3

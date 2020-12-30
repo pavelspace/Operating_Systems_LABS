@@ -1,0 +1,9 @@
+#!/bin/bash
+
+oldInformation="$(cat /var/log/anaconda/X.log | awk '$3 = "(II)"')"
+
+echo "${oldInformation//"(II)"/"Information:"}" > full.log
+
+oldWarning="$(cat /var/log/anaconda/X.log | awk '$3 = "(WW)"')"
+
+echo "${oldWarning//"(WW)"/"Warning:"}" >> full.log
