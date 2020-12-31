@@ -1,17 +1,22 @@
 #!/bin/bash
 
-ps aux | awk '{if ($6 != 0) print $2" "$6" "$11}' | sort -nk1 | tail -n +2 | head -n -6 > temp
+ps aux | awk '{printf $2" "$6" "$11"\n"}' | sort -nk 1 | tail -n +2 | head -n -6 > buffer1
+
 sleep 60
-ps aux | awk '{if ($6 != 0) print $2" "$6" "$11}' | sort -mk1 | tail -n +2 | head -n -6 > temp2
-cat temp |
-while read a
+
+ps aux | awk '{printf $2" "$6" "$11"\n"}' | sort -nk 1 | tail -n +2 | head -n -6 > buffer2
+
+cat buffer1 | while read line
 do
-pid=$(awk '{print $1}' <<< $a)
-mem1=$(awk '{print $2}' <<< $a)
-cmd=$(awk '{print $3}' <<< $a)
-mem2=$(cat temp2 | awk -v id="$pid" '{if ($1==id) print $2}')
-let "mem = mem2 - men1"
-echo $pid":"$cmd":"$mem
-done | sort -nrk3 | head -3
-rm -f temp
-rm -f temp2
+
+    pspid=echo"$line | awk '{printf $1"\n"}'"
+    firstmemory=echo"$line | awk '{printf $2"\n"}'"
+    secondmemory=echo"buffer2 | awk -v id="$pspid" '{printf $2"\n"}'"
+    command=echo"$line | awk '{printf $3"\n"}'"
+    totalmemory=($secondmemory - $firstmemory)
+    echo -e "$pspid" : "$command" : "$totalmemory"
+
+done | sort -nrk 3 | head -3
+
+rm -f buffer1
+rm -f buffer2
