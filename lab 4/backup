@@ -1,0 +1,86 @@
+#!/bin/bash
+
+addBackup()
+{
+    
+touch .somefiles
+touch .somever
+
+directorybackup=$(find /home/user -name "Backup-[0-9]*-[0-9]*-[0-9]*" -type d -ctime -7)
+
+filesname=$(sed "s/\/home\/user\///" <<< $directorybackup)
+
+for file in $(ls -1 /home/user/source)
+do
+	if ! [ -f "$directorybackup/$file" ]
+    then
+
+		cp -a /home/user/source/"$file" $directorybackup
+		echo "$file" >> .somefiles
+
+	else
+		if [ $(wc -c /home/user/source/"$file" | sed "s/\ .*$//") -ne $(wc -c $directorybackup/"$file" | sed "s/\ .*$//") ]
+        then
+
+			mv $directorybackup/"$file" $directorybackup/"$file".$dateNow
+			cp -a /home/user/source/"$file" $directorybackup
+			echo "$file $file.$dateNow" >> .somever
+
+		fi
+	fi
+	done
+
+echo "$dateNow to directory '$filesname' with copies:" >> /home/user/backup-report
+
+cat .somefiles | while read -r line
+do
+	echo "$line" >> /home/user/backup-report
+done
+
+cat .somever | while read -r line
+do
+	echo "$line" >> /home/user/backup-report
+done
+}
+
+createDir()
+{
+	backupsname="Backup-$dateNow"
+
+	mkdir /home/user/$backupsname
+
+	for file in $(ls -1 /home/user/source)
+    do
+		cp -a /home/user/source/"$file" /home/user/$backupsname
+	done
+
+	echo "$dateNow created '$backupsname' with copies:" >> /home/user/backup-report
+
+	for file in $(ls -1 /home/user/$backupsname)
+    do
+        echo "$file" >> /home/user/backup-report
+    done
+
+}
+
+localdatenow=$(date +"%Y-%m-%d")
+
+if [ -d "/home/user/Backup-[0-9]*-[0-9]*-[0-9]*" ]
+then
+
+	beforedate=$(find /home/user -name "Backup-[0-9]*-[0-9]*-[0-9]*" -type d -ctime +7 | sed "s/\/home\/user\/Backup-//")
+	dateoldplussymbol=$(date -d "$beforedate" +"%s")
+	localdatenowplusymbol=$(date -d "$localdatenow" +"%s")
+
+	let "difference = localdatenowplusymbol - dateoldplussymbol"
+	let "difference = difference / 60 / 60 / 24"
+
+	if [[ $difference -gt 7 ]]
+    then
+		createDir
+	else
+		addBackup
+	fi
+else
+	createDir
+fi

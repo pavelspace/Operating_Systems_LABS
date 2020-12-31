@@ -1,0 +1,24 @@
+#!/bin/bash
+
+if [[ ! -d  ~/.trash ]]; 
+then
+    mkdir ~/.trash
+fi
+
+if [[ ! -f "./$1" ]]; 
+then
+    echo "Wrong name of file in arguments"
+    exit 1
+fi
+
+name=0
+path="$(pwd "$1")/"$1""
+
+while [ -f ~/.trash/$name ] 
+do
+        let "name += 1"
+done
+
+ln "$path" ~/.trash/$name
+rm $1
+echo "Path: "$path"; Hard link: $name" >> ~/.trash.log

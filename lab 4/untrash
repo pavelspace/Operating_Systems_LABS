@@ -1,0 +1,53 @@
+#!/bin/bash
+
+grep "$1" ~/.trash.log | while read -r line 
+do
+        filesname="$1"
+        pathtofile=$(grep -o "/.*"$filesname";" <<< "$line"| sed 's/;//')
+
+        link=$(grep -o "[0-9]*$" <<< "$line")
+
+        echo -e "'$pathtofile'? press y or n:"
+
+        read answer </dev/tty
+        case "$answer" in
+        "y")
+                d=$(sed "s/\/"$filesname"/\//" <<< "$pathtofile")
+                if [[ ! -d "$d" ]]
+                then
+                        pathtofile="$HOME/"$filesname""
+                fi
+                if [[ -f "$pathtofile" ]] 
+                then
+                        while true
+                        do
+                        echo -e "Change name of file? press y or n:"
+                        read answ </dev/tty
+                        case "$answ" in
+                        "y")
+                                echo -e "Enter new name: "
+                                read newName </dev/tty
+                                newPath=$(sed "s/\/"$filesname"/\/"$newName"/" <<< "$path")
+                                if [[ ! -f "$newPath" ]]
+                                then
+                                        filesname="$newName"
+                                        path="$newPath"
+                                        break
+                                fi
+                        ;;
+                        *)
+                        exit
+                        ;;
+                        esac
+                        done
+                fi
+                ln ~/.trash/"$link" "$path"
+                rm ~/.trash/"$link"
+                sed -i "/"$link"$/d" ~/.trash.log
+                exit
+        ;;
+        *)
+                :
+        ;;
+        esac
+done
